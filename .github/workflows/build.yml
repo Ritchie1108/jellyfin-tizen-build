@@ -44,7 +44,7 @@ jobs:
         id: jellyfin-web-sha
         run: |
           cd ${GITHUB_WORKSPACE}/jellyfin-web
-          echo "jellyfin-web-sha=$(git log -1 --format='%H')" >> $GITHUB_OUTPUT
+          echo "value=$(git log -1 --format='%H')" >> $GITHUB_OUTPUT
           git rev-parse HEAD
 
       - name: Clone jellyfin-tizen
@@ -58,21 +58,21 @@ jobs:
         id: jellyfin-tizen-sha
         run: |
           cd ${GITHUB_WORKSPACE}/jellyfin-tizen
-          echo "jellyfin-tizen-sha=$(git log -1 --format='%H')" >> $GITHUB_OUTPUT
+          echo "value=$(git log -1 --format='%H')" >> $GITHUB_OUTPUT
           git rev-parse HEAD
 
       - name: echo evn
         run: |
-          echo ${{ steps.jellyfin-web-sha.outputs.test }}
-          echo ${{ steps.last-jellyfin-web-sha.outputs.test }}
-          echo ${{ steps.jellyfin-tizen-sha.outputs.test }}
-          echo ${{ steps.last-jellyfin-tizen-sha.outputs.test }}
+          echo ${{ steps.jellyfin-web-sha.outputs.value }}
+          echo ${{ steps.last-jellyfin-web-sha.outputs.value }}
+          echo ${{ steps.jellyfin-tizen-sha.outputs.value }}
+          echo ${{ steps.last-jellyfin-tizen-sha.outputs.value }}
 
       - name: Compare sha
         uses: haya14busa/action-cond@v1
         id: status
         with:
-          cond: ${{ steps.jellyfin-web-sha.outputs.test != steps.last-jellyfin-web-sha.outputs.test || steps.jellyfin-tizen-sha.outputs.test != steps.last-jellyfin-tizen-sha.outputs.test }}
+          cond: ${{ steps.jellyfin-web-sha.outputs.value != steps.last-jellyfin-web-sha.outputs.value || steps.jellyfin-tizen-sha.outputs.value != steps.last-jellyfin-tizen-sha.outputs.value }}
           if_true: "deploy"
           if_false: "skip"
           
@@ -139,7 +139,7 @@ jobs:
         id: jellyfin-web-sha
         run: |
           cd ${GITHUB_WORKSPACE}/jellyfin-web
-          echo "jellyfin-web-sha=$(git log -1 --format='%H')" >> $GITHUB_OUTPUT
+          echo "value=$(git log -1 --format='%H')" >> $GITHUB_OUTPUT
           git rev-parse HEAD
 
       - name: Clone jellyfin-tizen
@@ -153,7 +153,7 @@ jobs:
         id: jellyfin-tizen-sha
         run: |
           cd ${GITHUB_WORKSPACE}/jellyfin-tizen
-          echo "jellyfin-tizen-sha=$(git log -1 --format='%H')" >> $GITHUB_OUTPUT
+          echo "value=$(git log -1 --format='%H')" >> $GITHUB_OUTPUT
           git rev-parse HEAD
 
       - name: Build jellyfin-web
