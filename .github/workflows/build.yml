@@ -16,9 +16,20 @@ jobs:
   check_sha:
     runs-on: ubuntu-latest
     outputs:
-      chk_status: ${{ steps.status.outputs.test }}
+      chk_status: ${{ steps.status.outputs.value }}
 
     steps:
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '>=16'
+          
+      - name: Install Yarn
+        run: npm install -g yarn
+          
+      - name: Install Needed packages
+        run: sudo apt install expect
+
       - name: Get last-jellyfin-web sha
         id: last-jellyfin-web-sha
         uses: aaimio/get-persistent-value@v1.1.3
@@ -75,7 +86,7 @@ jobs:
           cond: ${{ steps.jellyfin-web-sha.outputs.value != steps.last-jellyfin-web-sha.outputs.value || steps.jellyfin-tizen-sha.outputs.value != steps.last-jellyfin-tizen-sha.outputs.value }}
           if_true: "deploy"
           if_false: "skip"
-          
+
   build:
     needs: check_sha
     if: needs.check_sha.outputs.chk_status == 'deploy'
