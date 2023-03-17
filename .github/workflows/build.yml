@@ -1,0 +1,191 @@
+name: build jellyfin-tizen release
+
+on:
+  schedule:
+   # 每天国际时间 17:20 运行一次, 中国时间 01:20
+    - cron: '20 17 * * *'
+
+  workflow_dispatch:
+  
+env:
+  TIZEN_STUDIO_VER: 5.0
+  TIZEN_STUDIO_URL: https://download.tizen.org/sdk/Installer/tizen-studio_$TIZEN_STUDIO_VER/web-cli_Tizen_Studio_$TIZEN_STUDIO_VER_ubuntu-64.bin
+  TIZEN_STUDIO_FILE: web-cli_Tizen_Studio_$TIZEN_STUDIO_VER_ubuntu-64.bin
+
+jobs:
+  check_sha:
+    runs-on: ubuntu-latest
+    outputs:
+      chk_status: ${{ steps.status.outputs.test }}
+
+    steps:
+      - name: Get last-jellyfin-web sha
+        id: last-jellyfin-web-sha
+        uses: aaimio/get-persistent-value@v1.1.2
+        with:
+          key: jellyfin-web
+          access_token: ${{ secrets.PERSISTENT_VALUE_ACCESS_TOKEN }}
+
+      - name: Get last-jellyfin-tizen sha
+        id: last-jellyfin-tizen-sha
+        uses: aaimio/get-persistent-value@v1.1.2
+        with:
+          key: jellyfin-tizen
+          access_token: ${{ secrets.PERSISTENT_VALUE_ACCESS_TOKEN }}
+
+      - name: Clone jellyfin-web
+        uses: actions/checkout@v3
+        with:
+          repository: 'jellyfin/jellyfin-web'
+          ref: 'release-10.8.z'
+          
+      - name: Get jellyfin-web sha
+        id: jellyfin-web-sha
+        run: |
+          cd jellyfin-web
+          echo "jellyfin-web-sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+          git rev-parse HEAD
+
+      - name: Clone jellyfin-tizen
+        uses: actions/checkout@v3
+        with:
+          repository: 'jellyfin/jellyfin-tizen'
+          ref: 'master'
+
+      - name: Get jellyfin-tizen sha
+        id: jellyfin-tizen-sha
+        run: |
+          cd jellyfin-tizen
+          echo "jellyfin-tizen-sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+          git rev-parse HEAD
+
+      - name: Compare sha
+        uses: haya14busa/action-cond@v1
+        id: status
+        with:
+          cond: ${{ steps.jellyfin-web-sha.outputs.value != steps.last-jellyfin-web-sha.outputs.value  || steps.jellyfin-tizen-sha.outputs.value != steps.last-jellyfin-tizen-sha.outputs.value }}
+          if_true: "deploy"
+          if_false: "skip"
+          
+  build:
+    needs: check_sha
+    if: needs.check_sha.outputs.chk_status == 'deploy'
+    
+    runs-on: ubuntu-latest
+    steps:
+      - run: env
+      
+      - name: 'Checkout'
+        uses: actions/checkout@v3
+        
+      - name: Get current date
+        id: date
+        run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+      
+      - name: Set Release Label
+        uses: haya14busa/action-cond@v1
+        id: label
+        with:
+          cond: ${{ github.event.client_payload.release_label != 0 }}
+          if_true: ${{ github.event.client_payload.release_label }}
+          if_false: ${{ steps.date.outputs.date }}
+      
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '>=16'
+          
+      - name: Install Yarn
+        run: npm install -g yarn
+          
+      - name: Install Needed packages
+        run: sudo apt install expect
+      
+      - name: Download Tizen-Studio
+        run: |
+          curl -o tizen-installer "https://download.tizen.org/sdk/Installer/tizen-studio_${TIZEN_STUDIO_VER}/web-cli_Tizen_Studio_${TIZEN_STUDIO_VER}_ubuntu-64.bin"
+
+      - name: Install Tizen-Studio
+        run: |
+          chmod +x tizen-installer
+          ./tizen-installer --accept-license "${GITHUB_WORKSPACE}/tizen-studio"
+          rm ./tizen-installer
+          echo 'export PATH=$PATH:/tizen-studio/tools/ide/bin' >> .bashrc
+          
+      - name: Prepare Tizen Certificate
+        run: |
+          ./tizen-studio/tools/ide/bin/tizen certificate -a Jellyfin -p 1234 -c NZ -s Aukland -ct Aukland -o Tizen -n Jellyfin -e jellyfin@example.org -f tizencert
+          ./tizen-studio/tools/ide/bin/tizen security-profiles add -n Jellyfin -a "${GITHUB_WORKSPACE}/tizen-studio-data/keystore/author/tizencert.p12" -p 1234
+          ./tizen-studio/tools/ide/bin/tizen cli-config "profiles.path=${GITHUB_WORKSPACE}/tizen-studio-data/profile/profiles.xml"
+          chmod 755 "${GITHUB_WORKSPACE}/tizen-studio-data/profile/profiles.xml"
+
+      - name: Clone jellyfin-web
+        uses: actions/checkout@v3
+        with:
+          repository: 'jellyfin/jellyfin-web'
+          ref: 'release-10.8.z'
+          
+      - name: Get jellyfin-web sha
+        id: jellyfin-web-sha
+        run: |
+          cd jellyfin-web
+          echo "jellyfin-web-sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+          git rev-parse HEAD
+
+      - name: Clone jellyfin-tizen
+        uses: actions/checkout@v3
+        with:
+          repository: 'jellyfin/jellyfin-tizen'
+          ref: 'master'
+
+      - name: Get jellyfin-tizen sha
+        id: jellyfin-tizen-sha
+        run: |
+          cd jellyfin-tizen
+          echo "jellyfin-tizen-sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+          git rev-parse HEAD
+
+      - name: Build jellyfin-web
+        run: |
+          cd jellyfin-web
+          SKIP_PREPARE=1 npm ci --no-audit
+          npm run build:production
+
+      - name: Build jellyfin-tizen
+        run: |
+          cd jellyfin-tizen
+          JELLYFIN_WEB_DIR=../jellyfin-web/dist npm ci --no-audit
+          ../tizen-studio/tools/ide/bin/tizen build-web -e ".*" -e gulpfile.js -e README.md -e "node_modules/*" -e "package*.json" -e "yarn.lock"
+
+      - name: Prepare for password prompt
+        run: |
+          sed -i "s|${GITHUB_WORKSPACE}/tizen-studio-data/keystore/author/tizencert.pwd|1234|g" ${GITHUB_WORKSPACE}/tizen-studio-data/profile/profiles.xml
+          sed -i "s|${GITHUB_WORKSPACE}/tizen-studio-data/tools/certificate-generator/certificates/distributor/tizen-distributor-signer.pwd|tizenpkcs12passfordsigner|g" ${GITHUB_WORKSPACE}/tizen-studio-data/profile/profiles.xml
+          sed -i 's|password=""|password="tizenpkcs12passfordsigner"|g' ${GITHUB_WORKSPACE}/tizen-studio-data/profile/profiles.xml
+          
+      - name: Package jellyfin-tizen wgt
+        run: |
+          expect ./package.exp
+
+      - name: Print logs
+        if: always()
+        run: cat ./tizen-studio-data/cli/logs/cli.log
+        
+      - name: List All Files
+        if: always()
+        run: ls -R
+        
+      - name: Set a persistent value
+        id: set_persistent_value
+        uses: aaimio/set-persistent-value@v1.1.2
+        with:
+          json: '{ "jellyfin-web": ${{ steps.jellyfin-web-sha.outputs.value }}, "jellyfin-tizen": ${{ steps.jellyfin-tizen-sha.outputs.value }} }'
+          access_token: ${{ secrets.PERSISTENT_VALUE_ACCESS_TOKEN }}
+          
+      - name: Release Build Result
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.label.outputs.value }}
+          files: |
+            jellyfin-tizen/release/Jellyfin.wgt
+          body: "## jellyfin-web\nhttps://github.com/jellyfin/jellyfin-web/commit/${{ steps.jellyfin-web-sha.outputs.value }}\n## jellyfin-tizen\nhttps://github.com/jellyfin/jellyfin-tizen/commit/${{ steps.jellyfin-tizen-sha.outputs.value }}"
