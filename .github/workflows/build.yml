@@ -21,14 +21,14 @@ jobs:
     steps:
       - name: Get last-jellyfin-web sha
         id: last-jellyfin-web-sha
-        uses: aaimio/get-persistent-value@v1.1.2
+        uses: aaimio/get-persistent-value@v1.1.3
         with:
           key: jellyfin-web
           access_token: ${{ secrets.PERSISTENT_VALUE_ACCESS_TOKEN }}
 
       - name: Get last-jellyfin-tizen sha
         id: last-jellyfin-tizen-sha
-        uses: aaimio/get-persistent-value@v1.1.2
+        uses: aaimio/get-persistent-value@v1.1.3
         with:
           key: jellyfin-tizen
           access_token: ${{ secrets.PERSISTENT_VALUE_ACCESS_TOKEN }}
@@ -42,8 +42,8 @@ jobs:
       - name: Get jellyfin-web sha
         id: jellyfin-web-sha
         run: |
-          cd jellyfin-web
-          echo "jellyfin-web-sha=$(/usr/bin/git log -1 --format='%H')" >> $GITHUB_OUTPUT
+          cd ${GITHUB_WORKSPACE}/jellyfin-web
+          echo "jellyfin-web-sha=$(git log -1 --format='%H')" >> $GITHUB_OUTPUT
           git rev-parse HEAD
 
       - name: Clone jellyfin-tizen
@@ -55,8 +55,8 @@ jobs:
       - name: Get jellyfin-tizen sha
         id: jellyfin-tizen-sha
         run: |
-          cd jellyfin-tizen
-          echo "jellyfin-tizen-sha=$(/usr/bin/git log -1 --format='%H')" >> $GITHUB_OUTPUT
+          cd ${GITHUB_WORKSPACE}/jellyfin-tizen
+          echo "jellyfin-tizen-sha=$(git log -1 --format='%H')" >> $GITHUB_OUTPUT
           git rev-parse HEAD
 
       - name: Compare sha
@@ -128,8 +128,8 @@ jobs:
       - name: Get jellyfin-web sha
         id: jellyfin-web-sha
         run: |
-          cd jellyfin-web
-          echo "jellyfin-web-sha=$(/usr/bin/git log -1 --format='%H')" >> $GITHUB_OUTPUT
+          cd ${GITHUB_WORKSPACE}/jellyfin-web
+          echo "jellyfin-web-sha=$(git log -1 --format='%H')" >> $GITHUB_OUTPUT
           git rev-parse HEAD
 
       - name: Clone jellyfin-tizen
@@ -141,19 +141,19 @@ jobs:
       - name: Get jellyfin-tizen sha
         id: jellyfin-tizen-sha
         run: |
-          cd jellyfin-tizen
-          echo "jellyfin-tizen-sha=$(/usr/bin/git log -1 --format='%H')" >> $GITHUB_OUTPUT
+          cd ${GITHUB_WORKSPACE}/jellyfin-tizen
+          echo "jellyfin-tizen-sha=$(git log -1 --format='%H')" >> $GITHUB_OUTPUT
           git rev-parse HEAD
 
       - name: Build jellyfin-web
         run: |
-          cd jellyfin-web
+          cd ${GITHUB_WORKSPACE}/jellyfin-web
           SKIP_PREPARE=1 npm ci --no-audit
           npm run build:production
 
       - name: Build jellyfin-tizen
         run: |
-          cd jellyfin-tizen
+          cd ${GITHUB_WORKSPACE}/jellyfin-tizen
           JELLYFIN_WEB_DIR=../jellyfin-web/dist npm ci --no-audit
           ../tizen-studio/tools/ide/bin/tizen build-web -e ".*" -e gulpfile.js -e README.md -e "node_modules/*" -e "package*.json" -e "yarn.lock"
 
@@ -177,7 +177,7 @@ jobs:
         
       - name: Set a persistent value
         id: set_persistent_value
-        uses: aaimio/set-persistent-value@v1.1.2
+        uses: aaimio/set-persistent-value@v1.1.3
         with:
           json: '{ "jellyfin-web": ${{ steps.jellyfin-web-sha.outputs.value }}, "jellyfin-tizen": ${{ steps.jellyfin-tizen-sha.outputs.value }} }'
           access_token: ${{ secrets.PERSISTENT_VALUE_ACCESS_TOKEN }}
