@@ -65,7 +65,7 @@ jobs:
         uses: haya14busa/action-cond@v1
         id: status
         with:
-          cond: ${{ steps.jellyfin-web-sha.outputs.value != steps.last-jellyfin-web-sha.outputs.value  || steps.jellyfin-tizen-sha.outputs.value != steps.last-jellyfin-tizen-sha.outputs.value }}
+          cond: ${{ steps.jellyfin-web-sha.outputs.test != steps.last-jellyfin-web-sha.outputs.test  || steps.jellyfin-tizen-sha.outputs.test != steps.last-jellyfin-tizen-sha.outputs.test }}
           if_true: "deploy"
           if_false: "skip"
           
