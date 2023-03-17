@@ -43,7 +43,7 @@ jobs:
         id: jellyfin-web-sha
         run: |
           cd jellyfin-web
-          echo "jellyfin-web-sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+          echo "jellyfin-web-sha=$(/usr/bin/git log -1 --format='%H')" >> $GITHUB_OUTPUT
           git rev-parse HEAD
 
       - name: Clone jellyfin-tizen
@@ -56,7 +56,7 @@ jobs:
         id: jellyfin-tizen-sha
         run: |
           cd jellyfin-tizen
-          echo "jellyfin-tizen-sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+          echo "jellyfin-tizen-sha=$(/usr/bin/git log -1 --format='%H')" >> $GITHUB_OUTPUT
           git rev-parse HEAD
 
       - name: Compare sha
@@ -129,7 +129,7 @@ jobs:
         id: jellyfin-web-sha
         run: |
           cd jellyfin-web
-          echo "jellyfin-web-sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+          echo "jellyfin-web-sha=$(/usr/bin/git log -1 --format='%H')" >> $GITHUB_OUTPUT
           git rev-parse HEAD
 
       - name: Clone jellyfin-tizen
@@ -142,7 +142,7 @@ jobs:
         id: jellyfin-tizen-sha
         run: |
           cd jellyfin-tizen
-          echo "jellyfin-tizen-sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+          echo "jellyfin-tizen-sha=$(/usr/bin/git log -1 --format='%H')" >> $GITHUB_OUTPUT
           git rev-parse HEAD
 
       - name: Build jellyfin-web
