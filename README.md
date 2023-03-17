@@ -1,7 +1,7 @@
 # jellyfin-tizen-builds
 The purpose of this repository is to automatically build the most up-to-date version of jellyfin-tizen.
 
-## Installation
+## Installation Guide
 ### Prerequisites
 - Install Tizen Studio  and CLI (https://developer.tizen.org/development/tizen-studio/download)
 - Download .wgt files from a release (https://github.com/Ritchie1108/jellyfin-tizen-build/releases)
