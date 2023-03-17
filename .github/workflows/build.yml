@@ -201,7 +201,7 @@ jobs:
         id: set_persistent_value
         uses: aaimio/set-persistent-value@v1.1.3
         with:
-          json: '{ "jellyfin-web": ${{ steps.jellyfin-web-sha.outputs.value }}, "jellyfin-tizen": ${{ steps.jellyfin-tizen-sha.outputs.value }} }'
+          json: '{ "jellyfin-web": "${{ steps.jellyfin-web-sha.outputs.value }}", "jellyfin-tizen": "${{ steps.jellyfin-tizen-sha.outputs.value }}" }'
           access_token: ${{ secrets.PERSISTENT_VALUE_ACCESS_TOKEN }}
           
       - name: Release Build Result
