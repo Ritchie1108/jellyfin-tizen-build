@@ -38,6 +38,7 @@ jobs:
         with:
           repository: 'jellyfin/jellyfin-web'
           ref: 'release-10.8.z'
+          path: ${{GITHUB_WORKSPACE}}
           
       - name: Get jellyfin-web sha
         id: jellyfin-web-sha
@@ -51,6 +52,7 @@ jobs:
         with:
           repository: 'jellyfin/jellyfin-tizen'
           ref: 'master'
+          path: ${{GITHUB_WORKSPACE}}
 
       - name: Get jellyfin-tizen sha
         id: jellyfin-tizen-sha
@@ -77,6 +79,8 @@ jobs:
       
       - name: 'Checkout'
         uses: actions/checkout@v3
+        with:
+          path: ${{GITHUB_WORKSPACE}}
         
       - name: Get current date
         id: date
@@ -124,6 +128,7 @@ jobs:
         with:
           repository: 'jellyfin/jellyfin-web'
           ref: 'release-10.8.z'
+          path: ${{GITHUB_WORKSPACE}}
           
       - name: Get jellyfin-web sha
         id: jellyfin-web-sha
@@ -137,6 +142,7 @@ jobs:
         with:
           repository: 'jellyfin/jellyfin-tizen'
           ref: 'master'
+          path: ${{GITHUB_WORKSPACE}}
 
       - name: Get jellyfin-tizen sha
         id: jellyfin-tizen-sha
