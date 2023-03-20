@@ -15,6 +15,6 @@ The purpose of this repository is to automatically build the most up-to-date ver
 3. Install the package.  
 To navigate to your directory, typically located in `/tizen-studio/tools/ide/bin`
 ```bash
-tizen install -n Jellyfin.wgt -t <the name of your tv>
+tizen install -n jellyfin.wgt -t <the name of your tv>
 ```
 > You can find your tv name in Device Manager from Tizen Studio or using `sdb devices`.  
