@@ -17,7 +17,7 @@ The purpose of this repository is to automatically build the most up-to-date rel
 > 路径一般位于 / Typically located in: `/tizen-studio/tools/device-manager/bin`
 
 3. 在命令行中 cd 到下面的目录 / To navigate to your directory.
-> 路径一般位于 / typically located in: `/tizen-studio/tools/ide/bin`
+> 路径一般位于 / Typically located in: `/tizen-studio/tools/ide/bin`
 
 4. 在命令行中输入以下命令, 注意 wgt 文件名 / Install the package, using your .wgt filename.
 ```bash
