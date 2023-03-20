@@ -9,8 +9,8 @@ on:
   
 env:
   TIZEN_STUDIO_VER: "5.0"
-  TIZEN_STUDIO_URL: https://download.tizen.org/sdk/Installer/tizen-studio_$TIZEN_STUDIO_VER/web-cli_Tizen_Studio_$TIZEN_STUDIO_VER_ubuntu-64.bin
-  TIZEN_STUDIO_FILE: web-cli_Tizen_Studio_$TIZEN_STUDIO_VER_ubuntu-64.bin
+  TIZEN_STUDIO_URL: "https://download.tizen.org/sdk/Installer/tizen-studio_${TIZEN_STUDIO_VER}/web-cli_Tizen_Studio_${TIZEN_STUDIO_VER}_ubuntu-64.bin"
+  JELLYFIN_WEB_TAG: "release-10.8.z"
 
 jobs:
   check_sha:
@@ -123,7 +123,7 @@ jobs:
       
       - name: Download tizen-studio
         run: |
-          curl -o tizen-installer "https://download.tizen.org/sdk/Installer/tizen-studio_${TIZEN_STUDIO_VER}/web-cli_Tizen_Studio_${TIZEN_STUDIO_VER}_ubuntu-64.bin"
+          wget -O tizen-installer ${TIZEN_STUDIO_URL}
 
       - name: Install tizen-studio
         run: |
@@ -143,7 +143,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: 'jellyfin/jellyfin-web'
-          ref: 'release-10.8.z'
+          ref: ${JELLYFIN_WEB_TAG}
           path: jellyfin-web
           
       - name: Get jellyfin-web sha
@@ -203,7 +203,7 @@ jobs:
       - name: Release build result
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ steps.label.outputs.value }}
+          tag_name: ${JELLYFIN_WEB_TAG}_${{ steps.label.outputs.value }}
           files: |
             jellyfin-tizen/release/Jellyfin.wgt
           body: "## jellyfin-web\nhttps://github.com/jellyfin/jellyfin-web/commit/${{ steps.jellyfin-web-sha.outputs.value }}\n## jellyfin-tizen\nhttps://github.com/jellyfin/jellyfin-tizen/commit/${{ steps.jellyfin-tizen-sha.outputs.value }}"
