@@ -1,13 +1,13 @@
 # jellyfin-tizen-build
-每天定时检查稳定分支的最新提交来自动构建并发 jellyfin-tizen
+每天定时检查稳定分支的最新提交来自动构建并发 jellyfin-tizen 
 The purpose of this repository is to automatically build the most up-to-date release version of jellyfin-tizen.
 
 ## How to use
-### 环境依赖 Prerequisites
+### 环境依赖 / Prerequisites
 - 安装  Tizen Studio 和 CLI / Install Tizen Studio and CLI (https://developer.tizen.org/development/tizen-studio/download)
 - 下载你需要的发布版本 / Download .wgt files from a release (https://github.com/Ritchie1108/jellyfin-tizen-build/releases)
 
-### 安装到电视上 Deploy to TV
+### 安装到电视上 / Deploy to TV
 1. 开启电视的开发者模式 / Activate Developer Mode on TV (https://developer.samsung.com/tv/develop/getting-started/using-sdk/tv-device).
 2. 在 Tizen Studio 的 Device Manager 中连接上你的电视 / Connect to TV with Device Manager from Tizen Studio. 
 > 路径一般位于 / Typically located in: `/tizen-studio/tools/device-manager/bin`
