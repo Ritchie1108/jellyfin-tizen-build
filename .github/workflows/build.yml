@@ -201,12 +201,12 @@ jobs:
 
       - name: Rename wgt file
         run: |
-          mv jellyfin-tizen/release/Jellyfin.wgt jellyfin-tizen/release/Jellyfin_${{env.JELLYFIN_WEB_TAG}}_${{ steps.label.outputs.value }}.wgt
+          mv jellyfin-tizen/release/Jellyfin.wgt jellyfin-tizen/release/jellyfin_${{env.JELLYFIN_WEB_TAG}}_${{ steps.label.outputs.value }}.wgt
 
       - name: Release build result
         uses: softprops/action-gh-release@v1
         with:
           tag_name: "${{env.JELLYFIN_WEB_TAG}}"
           files: |
-            jellyfin-tizen/release/Jellyfin_${{env.JELLYFIN_WEB_TAG}}_${{ steps.label.outputs.value }}.wgt
+            jellyfin-tizen/release/jellyfin_${{env.JELLYFIN_WEB_TAG}}_${{ steps.label.outputs.value }}.wgt
           body: "## jellyfin-web\nhttps://github.com/jellyfin/jellyfin-web/commit/${{ steps.jellyfin-web-sha.outputs.value }}\n## jellyfin-tizen\nhttps://github.com/jellyfin/jellyfin-tizen/commit/${{ steps.jellyfin-tizen-sha.outputs.value }}"
