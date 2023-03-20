@@ -4,8 +4,10 @@ The purpose of this repository is to automatically build the most up-to-date rel
 
 ## How to use
 ### 环境依赖 / Prerequisites
-- 安装  Tizen Studio 和 CLI / Install Tizen Studio and CLI. (https://developer.tizen.org/development/tizen-studio/download)
-- 下载你需要的发布版本 / Download .wgt files from a release. (https://github.com/Ritchie1108/jellyfin-tizen-build/releases)
+- 安装  Tizen Studio 和 CLI / Install Tizen Studio and CLI.   
+(https://developer.tizen.org/development/tizen-studio/download)
+- 下载你需要的发布版本 / Download .wgt files from a release.   
+(https://github.com/Ritchie1108/jellyfin-tizen-build/releases)
 
 ### 安装到电视上 / Deploy to TV
 1. 开启电视的开发者模式 / Activate Developer Mode on TV.   
