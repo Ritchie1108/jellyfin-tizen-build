@@ -19,7 +19,7 @@ jobs:
       chk_status: ${{ steps.status.outputs.value }}
 
     steps:
-      - name: Install Node.js
+      - name: Install node.js
         uses: actions/setup-node@v3
         with:
           node-version: ">=${{env.NODE_MINIMUM_VER}}"
@@ -66,12 +66,12 @@ jobs:
           echo "value=$(git log -1 --format='%H')" >> $GITHUB_OUTPUT
           git rev-parse HEAD
 
-      - name: echo evn
+      - name: Echo sha evn
         run: |
-          echo ${{ steps.jellyfin-web-sha.outputs.value }}
-          echo ${{ steps.last-jellyfin-web-sha.outputs.value }}
-          echo ${{ steps.jellyfin-tizen-sha.outputs.value }}
-          echo ${{ steps.last-jellyfin-tizen-sha.outputs.value }}
+          echo jellyfin-web-sha: ${{ steps.jellyfin-web-sha.outputs.value }}
+          echo last-jellyfin-web-sha: ${{ steps.last-jellyfin-web-sha.outputs.value }}
+          echo jellyfin-tizen-sha: ${{ steps.jellyfin-tizen-sha.outputs.value }}
+          echo last-jellyfin-tizen-sha: ${{ steps.last-jellyfin-tizen-sha.outputs.value }}
 
       - name: Compare sha
         uses: haya14busa/action-cond@v1
