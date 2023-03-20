@@ -9,7 +9,6 @@ on:
   
 env:
   TIZEN_STUDIO_VER: "5.0"
-  TIZEN_STUDIO_URL: "https://download.tizen.org/sdk/Installer/tizen-studio_${{TIZEN_STUDIO_VER}}/web-cli_Tizen_Studio_${{TIZEN_STUDIO_VER}}_ubuntu-64.bin"
   JELLYFIN_WEB_TAG: "release-10.8.z"
 
 jobs:
@@ -123,7 +122,7 @@ jobs:
       
       - name: Download tizen-studio
         run: |
-          wget -q -O tizen-installer ${TIZEN_STUDIO_URL}
+          wget -q -O tizen-installer "https://download.tizen.org/sdk/Installer/tizen-studio_${TIZEN_STUDIO_VER}/web-cli_Tizen_Studio_${TIZEN_STUDIO_VER}_ubuntu-64.bin"
 
       - name: Install tizen-studio
         run: |
