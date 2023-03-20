@@ -26,4 +26,6 @@ tizen install -n jellyfin.wgt -t <the name of your tv>
 > 电视名可以在 Device Manager 中进行查看, 也可以用 `sdb devices` 来查看 /  You can find your tv name in Device Manager from Tizen Studio or using `sdb devices`.  
 
 # Thanks for
+jellyfin/jellyfin-web: https://github.com/jellyfin/jellyfin-web
+jellyfin/jellyfin-tizen: https://github.com/jellyfin/jellyfin-tizen
 jeppevinkel/jellyfin-tizen-builds: https://github.com/jeppevinkel/jellyfin-tizen-builds
