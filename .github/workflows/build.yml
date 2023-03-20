@@ -24,12 +24,6 @@ jobs:
         with:
           node-version: ">=${{env.NODE_MINIMUM_VER}}"
 
-      - name: Install Yarn
-        run: npm install -g yarn
-
-      - name: Install Needed packages
-        run: sudo apt install expect
-
       - name: Get last-jellyfin-web sha
         id: last-jellyfin-web-sha
         uses: aaimio/get-persistent-value@v1.1.3
