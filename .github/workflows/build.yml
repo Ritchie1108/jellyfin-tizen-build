@@ -23,10 +23,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ">=${{env.NODE_MINIMUM_VER}}"
-          
+
       - name: Install Yarn
         run: npm install -g yarn
-          
+
       - name: Install Needed packages
         run: sudo apt install expect
 
@@ -94,14 +94,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: env
-      
+
       - name: 'Checkout'
         uses: actions/checkout@v3
-        
+
       - name: Get current date
         id: date
         run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
-      
+
       - name: Set release label
         uses: haya14busa/action-cond@v1
         id: label
@@ -109,16 +109,13 @@ jobs:
           cond: ${{ github.event.client_payload.release_label != 0 }}
           if_true: ${{ github.event.client_payload.release_label }}
           if_false: ${{ steps.date.outputs.date }}
-      
-      - name: Install Node.js
+
+      - name: Install node.js
         uses: actions/setup-node@v3
         with:
           node-version: ">=${{env.NODE_MINIMUM_VER}}"
-          
-      - name: Install Yarn
-        run: npm install -g yarn
-          
-      - name: Install needed packages
+
+      - name: Install expect
         run: sudo apt install expect
       
       - name: Download tizen-studio
@@ -145,7 +142,7 @@ jobs:
           repository: 'jellyfin/jellyfin-web'
           ref: ${{env.JELLYFIN_WEB_REF}}
           path: jellyfin-web
-          
+
       - name: Get jellyfin-web sha
         id: jellyfin-web-sha
         run: |
@@ -184,7 +181,7 @@ jobs:
           sed -i "s|${GITHUB_WORKSPACE}/tizen-studio-data/keystore/author/tizencert.pwd|1234|g" ${GITHUB_WORKSPACE}/tizen-studio-data/profile/profiles.xml
           sed -i "s|${GITHUB_WORKSPACE}/tizen-studio-data/tools/certificate-generator/certificates/distributor/tizen-distributor-signer.pwd|tizenpkcs12passfordsigner|g" ${GITHUB_WORKSPACE}/tizen-studio-data/profile/profiles.xml
           sed -i 's|password=""|password="tizenpkcs12passfordsigner"|g' ${GITHUB_WORKSPACE}/tizen-studio-data/profile/profiles.xml
-          
+
       - name: Package jellyfin-tizen wgt
         run: |
           expect ./package.exp
