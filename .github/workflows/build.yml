@@ -125,7 +125,7 @@ jobs:
           
       - name: Prepare tizen certificate
         run: |
-          ./tizen-studio/tools/ide/bin/tizen certificate -a Jellyfin -p 1234 -c NZ -s Aukland -ct Aukland -o Tizen -n Jellyfin -e jellyfin@example.org -f tizencert
+          ./tizen-studio/tools/ide/bin/tizen certificate -a Jellyfin -p 1234 -o Tizen -n Jellyfin -e jellyfin@example.org -f tizencert
           ./tizen-studio/tools/ide/bin/tizen security-profiles add -n Jellyfin -a "${GITHUB_WORKSPACE}/tizen-studio-data/keystore/author/tizencert.p12" -p 1234
           ./tizen-studio/tools/ide/bin/tizen cli-config "profiles.path=${GITHUB_WORKSPACE}/tizen-studio-data/profile/profiles.xml"
           chmod 755 "${GITHUB_WORKSPACE}/tizen-studio-data/profile/profiles.xml"
