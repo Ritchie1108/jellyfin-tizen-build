@@ -12,5 +12,10 @@ module.exports = merge(common, {
             swDest: 'serviceworker.js',
             maximumFileSizeToCacheInBytes: 5 * 1024 * 1024
         })
-    ]
+    ],
+    performance: {
+        hints: false,
+        maxEntrypointSize: 5 * 1024 * 1024,
+        maxAssetSize: 5 * 1024 * 1024
+    }
 });
