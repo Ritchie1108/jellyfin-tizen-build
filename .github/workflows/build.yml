@@ -160,10 +160,15 @@ jobs:
           echo "value=$(git log -1 --format='%H')" >> $GITHUB_OUTPUT
           git rev-parse HEAD
 
+      - name: Change jellyfin-web webpack
+        run: |
+          mv -f ./webpack.prod.js ${GITHUB_WORKSPACE}/jellyfin-web
+
       - name: Build jellyfin-web
         run: |
           cd ${GITHUB_WORKSPACE}/jellyfin-web
           SKIP_PREPARE=1 npm ci --no-audit
+          npx browserslist@latest --update-db
           npm run build:production
 
       - name: Change default icon
