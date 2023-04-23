@@ -160,9 +160,9 @@ jobs:
           echo "value=$(git log -1 --format='%H')" >> $GITHUB_OUTPUT
           git rev-parse HEAD
 
-      - name: Change jellyfin-web webpack
-        run: |
-          mv -f ./webpack.prod.js ${GITHUB_WORKSPACE}/jellyfin-web
+      # - name: Change jellyfin-web webpack
+      #   run: |
+      #     mv -f ./webpack.prod.js ${GITHUB_WORKSPACE}/jellyfin-web
 
       - name: Build jellyfin-web
         run: |
